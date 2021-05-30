@@ -8,6 +8,10 @@
 
 # YoutubeDownloaderGoGUI
 GUI Implementation of the YoutubeDownloaderGo library (https://github.com/Superredstone/youtubeDownloaderGo)
+  
+<div align="center">
+  <img src="https://github.com/Superredstone/YoutubeDownloaderGoGUI/blob/main/Assets/Screenshot.png"></img>
+</div>
 
 # How to build 🛠️
 ## Linux

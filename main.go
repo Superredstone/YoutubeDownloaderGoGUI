@@ -1,11 +1,11 @@
 package main
 
 import (
-	"flag"
 	"fmt"
 	"image/color"
 	"log"
 	"os"
+	"runtime"
 
 	"gioui.org/app"
 	"gioui.org/font/gofont"
@@ -21,8 +21,6 @@ import (
 )
 
 func main() {
-	flag.Parse()
-
 	go func() {
 		w := app.NewWindow(app.Size(unit.Dp(800), unit.Dp(300)), app.Title(topLabel))
 		if err := loop(w); err != nil {
@@ -37,18 +35,15 @@ func loop(w *app.Window) error {
 
 	var ops op.Ops
 	for {
-		select {
-		case e := <-w.Events():
-			switch e := e.(type) {
-			case system.DestroyEvent:
-				return e.Err
-			case system.FrameEvent:
-				gtx := layout.NewContext(&ops, e)
+		e := <-w.Events()
+		switch e := e.(type) {
+		case system.DestroyEvent:
+			return e.Err
+		case system.FrameEvent:
+			gtx := layout.NewContext(&ops, e)
 
-				kitchen(gtx, th)
-				e.Frame(gtx.Ops)
-			}
-
+			kitchen(gtx, th)
+			e.Frame(gtx.Ops)
 		}
 	}
 }
@@ -70,6 +65,7 @@ var (
 
 	URL        string
 	OutputName string
+	Log        string
 )
 
 type (
@@ -110,10 +106,12 @@ func kitchen(gtx layout.Context, th *material.Theme) layout.Dimensions {
 				layout.Rigid(func(gtx C) D {
 					return in.Layout(gtx, func(gtx C) D {
 						for button.Clicked() {
-							err := DownloadVideo()
-							if err != nil {
-								fmt.Println("Error")
-							}
+							go func() {
+								err := DownloadVideo()
+								if err != nil {
+									fmt.Println("Error")
+								}
+							}()
 						}
 						dims := material.Button(th, button, "Download").Layout(gtx)
 						pointer.CursorNameOp{Name: pointer.CursorPointer}.Add(gtx.Ops)
@@ -122,6 +120,9 @@ func kitchen(gtx layout.Context, th *material.Theme) layout.Dimensions {
 				}),
 			)
 		},
+		//TODELETE
+		material.H6(th, Log).Layout,
+
 		func(gtx C) D {
 			return layout.Flex{Alignment: layout.Middle}.Layout(gtx)
 		}}
@@ -137,10 +138,20 @@ func DownloadVideo() error {
 		return nil
 	}
 
+	switch runtime.GOOS {
+	case "android":
+		OutputName = "/storage/self/primary/Download/" + OutputName
+	}
+
 	fmt.Println("Downloading " + URL + " into " + OutputName + ".mp4")
+
 	err := ytDownloader.Download(URL, OutputName+".mp4")
 	if err != nil {
 		return err
+	}
+
+	if runtime.GOOS == "android" {
+		Log = "Video saved in Download/" + OutputName
 	}
 
 	fmt.Println("Download comlete.")

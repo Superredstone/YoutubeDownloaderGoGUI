@@ -18,11 +18,12 @@ import (
 	"gioui.org/widget"
 	"gioui.org/widget/material"
 	ytDownloader "github.com/Superredstone/youtubeDownloaderGo/Lib"
+	"github.com/atotto/clipboard"
 )
 
 func main() {
 	go func() {
-		w := app.NewWindow(app.Size(unit.Dp(800), unit.Dp(300)), app.Title(topLabel))
+		w := app.NewWindow(app.Size(unit.Dp(800), unit.Dp(360)), app.Title(topLabel))
 		if err := loop(w); err != nil {
 			log.Fatal(err)
 		}
@@ -33,7 +34,6 @@ func main() {
 func loop(w *app.Window) error {
 	th := material.NewTheme(gofont.Collection())
 
-	var ops op.Ops
 	for {
 		e := <-w.Events()
 		switch e := e.(type) {
@@ -57,15 +57,19 @@ var (
 		SingleLine: true,
 		Submit:     true,
 	}
-	button = new(widget.Clickable)
-	list   = &layout.List{
+	button      = new(widget.Clickable)
+	pasteButton = new(widget.Clickable)
+	list        = &layout.List{
 		Axis: layout.Vertical,
 	}
 	topLabel = "Youtube Downloader Go GUI"
+	urlLabel = "Youtube URL: "
 
 	URL        string
 	OutputName string
 	Log        string
+
+	ops op.Ops
 )
 
 type (
@@ -78,7 +82,7 @@ func kitchen(gtx layout.Context, th *material.Theme) layout.Dimensions {
 		//Youtube URL form
 		material.H3(th, topLabel).Layout,
 		func(gtx C) D {
-			e := material.Editor(th, urlForm, "Youtube URL: ")
+			e := material.Editor(th, urlForm, urlLabel)
 			e.Font.Style = text.Italic
 			border := widget.Border{Color: color.NRGBA{A: 0xff}, CornerRadius: unit.Dp(8), Width: unit.Px(2)}
 
@@ -87,6 +91,32 @@ func kitchen(gtx layout.Context, th *material.Theme) layout.Dimensions {
 			return border.Layout(gtx, func(gtx C) D {
 				return layout.UniformInset(unit.Dp(8)).Layout(gtx, e.Layout)
 			})
+
+		},
+		//Paste button
+		func(gtx C) D {
+			in := layout.UniformInset(unit.Dp(0))
+			return layout.Flex{Alignment: layout.Middle}.Layout(gtx,
+				layout.Rigid(func(gtx C) D {
+					return in.Layout(gtx, func(gtx C) D {
+						for pasteButton.Clicked() {
+							//When clicked
+							clipboardText, err := clipboard.ReadAll()
+							if err != nil {
+								fmt.Println(err)
+							}
+
+							URL = clipboardText
+							urlLabel = clipboardText
+						}
+
+						dims := material.Button(th, pasteButton, "Paste").Layout(gtx)
+						pointer.CursorNameOp{Name: pointer.CursorPointer}.Add(gtx.Ops)
+
+						return dims
+					})
+				}),
+			)
 		},
 		func(gtx C) D {
 			e := material.Editor(th, outputNameForm, "Output file: ")
@@ -101,7 +131,7 @@ func kitchen(gtx layout.Context, th *material.Theme) layout.Dimensions {
 		},
 		//Download Button
 		func(gtx C) D {
-			in := layout.UniformInset(unit.Dp(8))
+			in := layout.UniformInset(unit.Dp(0))
 			return layout.Flex{Alignment: layout.Middle}.Layout(gtx,
 				layout.Rigid(func(gtx C) D {
 					return in.Layout(gtx, func(gtx C) D {
@@ -120,7 +150,7 @@ func kitchen(gtx layout.Context, th *material.Theme) layout.Dimensions {
 				}),
 			)
 		},
-		//TODELETE
+
 		material.H6(th, Log).Layout,
 
 		func(gtx C) D {
@@ -144,6 +174,7 @@ func DownloadVideo() error {
 	}
 
 	fmt.Println("Downloading " + URL + " into " + OutputName + ".mp4")
+	Log = Log + "Downloading " + URL + " into " + OutputName + ".mp4\n"
 
 	err := ytDownloader.Download(URL, OutputName+".mp4")
 	if err != nil {
@@ -151,7 +182,7 @@ func DownloadVideo() error {
 	}
 
 	if runtime.GOOS == "android" {
-		Log = "Video saved in Download/" + OutputName
+		Log = "Video saved in Download/" + OutputName + "\n"
 	}
 
 	fmt.Println("Download comlete.")

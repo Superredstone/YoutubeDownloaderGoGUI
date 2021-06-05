@@ -4,6 +4,8 @@ gioui.org v0.0.0-20210520085948-5f631209eadd/go.mod h1:RSH6KIUZ0p2xy5zHDxgAM4zum
 github.com/BurntSushi/xgb v0.0.0-20160522181843-27f122750802/go.mod h1:IVnqGOEym/WlBOVXweHU+Q+/VP0lqqI8lqeDx9IjBqo=
 github.com/Superredstone/youtubeDownloaderGo v0.0.0-20210512135756-3d62724e3200 h1:QcykyNjZvhrULhrufDiWA2uj+t1AT8u8N6Gs83SmR4g=
 github.com/Superredstone/youtubeDownloaderGo v0.0.0-20210512135756-3d62724e3200/go.mod h1:79C0Yb163+4ZemhV7DNsNQyGguwtTeVvXgVk0mb4WLs=
+github.com/Superredstone/youtubeDownloaderGo v0.0.0-20210605144712-11286e0e4b17 h1:Mjbn8Gez61EfcszZzad4SoetWGwLcQcW0hyC0+4hltc=
+github.com/Superredstone/youtubeDownloaderGo v0.0.0-20210605144712-11286e0e4b17/go.mod h1:79C0Yb163+4ZemhV7DNsNQyGguwtTeVvXgVk0mb4WLs=
 github.com/atotto/clipboard v0.1.4 h1:EH0zSVneZPSuFR11BlR9YppQTVDbh5+16AmcJi4g1z4=
 github.com/atotto/clipboard v0.1.4/go.mod h1:ZY9tmq7sm5xIbd9bOK4onWV4S6X0u6GY7Vn0Yu86PYI=
 github.com/go-gl/glfw v0.0.0-20190409004039-e6da0acd62b1/go.mod h1:vR7hzQXu2zJy9AVAgeJqvqgH9Q5CA+iKCZ2gyEVpxRU=

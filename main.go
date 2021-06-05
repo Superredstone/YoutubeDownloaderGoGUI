@@ -17,13 +17,13 @@ import (
 	"gioui.org/unit"
 	"gioui.org/widget"
 	"gioui.org/widget/material"
-	ytDownloader "github.com/Superredstone/youtubeDownloaderGo/Lib"
+	ytDownloader "github.com/Superredstone/youtubeDownloaderGo/pkg"
 	"github.com/atotto/clipboard"
 )
 
 func main() {
 	go func() {
-		w := app.NewWindow(app.Size(unit.Dp(800), unit.Dp(360)), app.Title(topLabel))
+		w := app.NewWindow(app.Size(unit.Dp(800), unit.Dp(500)), app.Title(topLabel))
 		if err := loop(w); err != nil {
 			log.Fatal(err)
 		}
@@ -31,6 +31,7 @@ func main() {
 	}()
 	app.Main()
 }
+
 func loop(w *app.Window) error {
 	th := material.NewTheme(gofont.Collection())
 

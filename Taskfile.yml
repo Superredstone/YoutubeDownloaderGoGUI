@@ -1,0 +1,34 @@
+version: "3"
+
+tasks:
+  build_windows_amd64:
+    cmds:
+      - go get github.com/akavel/rsrc 
+      - rsrc.exe -arch amd64 -ico Assets/Download.ico
+      - env GOOS=windows GOARCH=amd64 go build -o YoutubeDownloaderGoGUI-windows-amd64.exe -ldflags="-H windowsgui"
+      - mv YoutubeDownloaderGoGUI-windows-amd64.exe build/
+
+  build_windows_arm:
+    cmds:
+      - go get github.com/akavel/rsrc 
+      - rsrc.exe -arch arm -ico Assets/Download.ico
+      - env GOOS=windows GOARCH=arm go build -o YoutubeDownloaderGoGUI-windows-arm.exe -ldflags="-H windowsgui" .
+      - mv YoutubeDownloaderGoGUI-windows-arm.exe build/
+  
+  build_linux:
+    cmds:
+      - env GOOS=linux GOARCH=amd64 go build -o YoutubeDownloaderGoGUI-linux-amd64 .
+      - mv YoutubeDownloaderGoGUI-linux-amd64.exe build/
+    ignore_error: true
+    
+  build_android:
+    cmds:
+      - go get gioui.org/cmd/gogio
+      - gogio -target android -o build/YoutubeDownloaderGoGUI-android.apk -icon Assets/icon.png -appid com.youtubedownloadergogui.superredstone .
+
+  default:
+    cmds:
+      - task: build_windows_amd64
+      - task: build_windows_arm
+      - task: build_linux
+      - task: build_android

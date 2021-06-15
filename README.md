@@ -14,6 +14,11 @@ GUI Implementation of the YoutubeDownloaderGo library (https://github.com/Superr
 </div>
 
 # How to build 🛠️
+
+*READ ME*
+To build without having an heartattack you need [task](https://taskfile.dev/#/) which is a nice tool for 
+task running like make but readable. You can compile also looking at the tasks inside [Taskfile.yml](""https://github.com/Superredstone/YoutubeDownloaderGoGUI/blob/main/Taskfile.yml)
+
 ## Linux
 First download dependeces
 ```bash
@@ -23,20 +28,32 @@ Then clone the repository and build
 ```bash
 git clone https://github.com/Superredstone/YoutubeDownloaderGoGUI.git
 cd YoutubeDownloaderGoGUI
-go build .
+mkdir build/
+task build_windows
 ```
 
 ## Windows
 Clone the repository and pray everything that builds on first try... (You can't build linux applications on Windows) 
 ```bash
 git clone https://github.com/Superredstone/YoutubeDownloaderGoGUI.git
+
 cd YoutubeDownloaderGoGUI
-go build -ldflags="-H windowsgui" .
+task build_windows_amd64
+or 
+task build_windows_arm
 ```
 
 ## MacOS
 MacOS users, you need to have Xcode and then view this guide [here](https://gioui.org/doc/install#apple) or you can use the CLI application, you can find it [here](https://github.com/Superredstone/youtubeDownloaderGo)
   
+## Android
+```
+git clone https://github.com/Superredstone/YoutubeDownloaderGoGUI.git
+cd YoutubeDownloaderGoGUI
+
+task build_android
+```
+
 # Donate :heart:
 Every donation is appriciated <3 <br> <br>
 <a href='https://ko-fi.com/A0A64PC0Y' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://cdn.ko-fi.com/cdn/kofi3.png?v=2' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
